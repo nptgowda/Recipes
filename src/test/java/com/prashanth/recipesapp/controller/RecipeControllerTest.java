@@ -57,7 +57,7 @@ public class RecipeControllerTest {
         String viewName = controller.showRecipes(model);
         ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
         //then
-        assertEquals("recipes",viewName);
+        assertEquals("showrecipes",viewName);
         Mockito.verify(recipeService,Mockito.times(1)).getRecipes();
         Mockito.verify(model,Mockito.times(1)).addAttribute(eq("recipes"),argumentCaptor.capture());
         Set<Recipe> controllerSet = argumentCaptor.getValue();
