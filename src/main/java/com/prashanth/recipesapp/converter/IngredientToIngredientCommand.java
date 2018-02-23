@@ -3,7 +3,9 @@ package com.prashanth.recipesapp.converter;
 import com.prashanth.recipesapp.command.IngredientCommand;
 import com.prashanth.recipesapp.model.Ingredient;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class IngredientToIngredientCommand implements Converter<Ingredient,IngredientCommand> {
 
     private final UnitOfMeasureToUnitOfMeasureCommand uomConverter;

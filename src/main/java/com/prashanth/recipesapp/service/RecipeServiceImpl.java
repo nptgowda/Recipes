@@ -1,5 +1,8 @@
 package com.prashanth.recipesapp.service;
 
+import com.prashanth.recipesapp.command.RecipeCommand;
+import com.prashanth.recipesapp.converter.RecipeCommandToRecipe;
+import com.prashanth.recipesapp.converter.RecipeToRecipeCommand;
 import com.prashanth.recipesapp.model.Recipe;
 import com.prashanth.recipesapp.repository.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +17,14 @@ import java.util.Set;
 @Slf4j
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
-
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository,
+                             RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepository = recipeRepository;
+        this.recipeCommandToRecipe = recipeCommandToRecipe;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
     @Override
@@ -35,5 +42,15 @@ public class RecipeServiceImpl implements RecipeService {
             throw new RuntimeException("Recipe Not Found");
         }
         return recipeOptional.get();
+    }
+
+    @Override
+    public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
+        Recipe recipe = recipeCommandToRecipe.convert(recipeCommand);
+
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        log.info("Saved RecipeCommand with Id: " + savedRecipe.getId());
+        return recipeToRecipeCommand.convert(savedRecipe);
+
     }
 }

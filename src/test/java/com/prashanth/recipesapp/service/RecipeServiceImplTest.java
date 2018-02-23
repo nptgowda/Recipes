@@ -1,5 +1,7 @@
 package com.prashanth.recipesapp.service;
 
+import com.prashanth.recipesapp.converter.RecipeCommandToRecipe;
+import com.prashanth.recipesapp.converter.RecipeToRecipeCommand;
 import com.prashanth.recipesapp.model.Recipe;
 import com.prashanth.recipesapp.repository.RecipeRepository;
 import org.junit.Before;
@@ -7,6 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -20,10 +23,15 @@ public class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Autowired
+    private RecipeToRecipeCommand recipeToRecipeCommand;
+    @Autowired
+    private RecipeCommandToRecipe recipeCommandToRecipe;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository,recipeCommandToRecipe,recipeToRecipeCommand);
     }
 
     @Test

@@ -3,7 +3,9 @@ package com.prashanth.recipesapp.converter;
 import com.prashanth.recipesapp.command.RecipeCommand;
 import com.prashanth.recipesapp.model.Recipe;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
 
     private final IngredientCommandToIngredient ingredientConverter;
