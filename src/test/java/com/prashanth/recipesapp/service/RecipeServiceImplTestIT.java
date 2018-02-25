@@ -55,6 +55,7 @@ public class RecipeServiceImplTestIT {
         assertEquals(RECIPE_ID, recipe.getId());
     }
 
+
     @Test
     @Transactional
     public void saveRecipeCommand() {

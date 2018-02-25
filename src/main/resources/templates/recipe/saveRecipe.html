@@ -13,10 +13,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"
             th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+
+    <script type="text/javascript" th:src="@{/js/jquery.ns-autogrow.min.js}"></script>
 </head>
 <body>
 <!--/*@thymesVar id="recipe" type="com.prashanth.recipesapp.model.Recipe"*/-->
-
+<script>
+    $(function(){
+        $('textarea').autogrow();
+    });
+</script>
     <form th:object="${recipe}" th:action="@{/recipe/}" method="post">
         <input type="hidden" th:field="*{id}"/>
         <div class="container">
@@ -44,11 +50,11 @@
             </div>
             <div class="card">
                 <div class="card-header">Direction</div>
-                <div class="card-body"><textarea rows="3" th:field="*{directions}"></textarea></div>
+                <div class="card-body"><textarea style="max-width: 100%" th:field="*{directions}"></textarea></div>
             </div>
             <div class="card">
                 <div class="card-header">Notes</div>
-                <div class="card-body"><textarea rows="3" th:field="*{notes.notes}"></textarea></div>
+                <div class="card-body"><textarea style="max-width: 100%" th:field="*{notes.notes}"></textarea></div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>

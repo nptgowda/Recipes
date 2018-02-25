@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 public class RecipeServiceImplTest {
 
@@ -58,14 +59,23 @@ public class RecipeServiceImplTest {
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         //when
-        Mockito.when(recipeRepository.findById(Mockito.anyLong())).thenReturn(recipeOptional);
+        Mockito.when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
         //then
         Recipe returnedRecipe = recipeService.getRecipeById(id);
         assertNotNull("Null Object Returned", returnedRecipe);
         assertEquals(id,returnedRecipe.getId());
-        Mockito.verify(recipeRepository,Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(recipeRepository,Mockito.times(1)).findById(anyLong());
         Mockito.verify(recipeRepository, Mockito.never()).findAll();
 
+    }
+
+    @Test
+    public void testDelete(){
+        Long idToDelete = 1L;
+
+        recipeService.deleteById(idToDelete);
+
+        Mockito.verify(recipeRepository,Mockito.times(1)).deleteById(anyLong());
     }
 }

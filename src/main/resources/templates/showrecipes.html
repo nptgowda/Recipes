@@ -19,6 +19,7 @@
                     <th>Id</th>
                     <th>Description</th>
                     <th>View</th>
+                    <th>Update</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,7 +27,8 @@
                     <!--/*@thymesVar id="recipe type="com.prashanth.recipesapp.model.Recipe"*/-->
                     <td th:text="${recipe.id}">123</td>
                     <td th:text="${recipe.description}">PRashanth</td>
-                    <td><a href="#" th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
+                    <td><a href="#" th:href="@{'/recipe/' + ${recipe.id}+'/show'}">View</a></td>
+                    <td><a href="#" th:href="@{'/recipe/' + ${recipe.id}+'/update'}">Update</a></td>
                 </tr>
             </tbody>
         </table>
