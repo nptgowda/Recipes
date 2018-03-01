@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredient</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}">
+    <script src="/webjars/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"
+            th:src="@{/webjars/popper.js/1.11.1/dist/popper.min.js}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+</head>
+<body>
+    <div class="container-fluid col-md-8">
+        <!--/*@thymesVar id="ingredient" type="com.prashanth.recipesapp.command.IngredientCommand"*/-->
+        <!--/*@thymesVar id="uom" type="com.prashanth.recipesapp.command.UnitOfMeasureCommand"*/-->
+        <form method="post" th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'}">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="card">
+                <div class="card-header">
+                    <h1>Ingredient</h1>
+                </div>
+                <div class="card-body">
+                    <label>Description:</label>
+                    <input type="text" class="form-control" th:field="*{description}"><br/>
+                    <label>Amount:</label>
+                    <input type="number" step="any" class="form-control" th:field="*{amount}"><br/>
+                    <label>Unit Of Measurement:</label>
+                    <select class="form-control" name="unitOfMeasure.id" th:field="*{unitOfMeasure.id}">
+                        <option th:each="uomEach : ${uomList}"
+                                th:value="${uomEach.id}"
+                                th:selected="${uomEach.id.equals(ingredient.unitOfMeasure.id)}",
+                                th:text="${uomEach.unitOfMeasure}">Each</option>
+                    </select>
+                </div>
+                <div class="card-footer">
+                    <button class="btb btn-primary" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredients</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}">
+    <script src="/webjars/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"
+            th:src="@{/webjars/popper.js/1.11.1/dist/popper.min.js}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<!--/*@thymesVar id="recipe" type="com.prashanth.recipesapp.model.Recipe"*/-->
+<!--/*@thymesVar id="recipe" type="com.prashanth.recipesapp.model.Ingredient"*/-->
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Ingredients</h1>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <th>Id</th>
+                    <th>Description</th>
+                    <th>View</th>
+                    <th>Delete</th>
+                </thead>
+                <tbody>
+                    <!--/*@thymesVar id="recipe" type="com.prashanth.recipesapp.model.Recipe"*/-->
+                    <tr th:each="ingredient : ${recipe.ingredients}">
+                        <td th:text="${ingredient.id}"></td>
+                        <td th:text="${ingredient.description}"></td>
+                        <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id}}">View</a></td>
+                        <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id}+'/delete'}">Delete</a></td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-default" href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/new'}">New Ingredient</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

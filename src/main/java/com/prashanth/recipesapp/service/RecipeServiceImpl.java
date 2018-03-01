@@ -3,6 +3,7 @@ package com.prashanth.recipesapp.service;
 import com.prashanth.recipesapp.command.RecipeCommand;
 import com.prashanth.recipesapp.converter.RecipeCommandToRecipe;
 import com.prashanth.recipesapp.converter.RecipeToRecipeCommand;
+import com.prashanth.recipesapp.exception.NotFoundException;
 import com.prashanth.recipesapp.model.Recipe;
 import com.prashanth.recipesapp.repository.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe getRecipeById(Long id) {
         Optional<Recipe> recipeOptional =  recipeRepository.findById(id);
         if(!recipeOptional.isPresent()){
-            throw new RuntimeException("Recipe Not Found");
+            throw new NotFoundException("Recipe with id :"+id+" Not Found");
         }
         return recipeOptional.get();
     }

@@ -29,6 +29,10 @@
             <div class="card">
                 <div class="card-header">Add Recipe Information</div>
                 <div class="card-body">
+                    <image src="../../static/images/guacamole400x400WithX.jpg"
+                           th:src="@{'/recipe/'+${recipe.id}+'/recipeimage'}"
+                           width="200" height="200"></image>
+                    <a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/image'}">Change Image</a><br />
                     <label>Recipe Description</label>
                     <input type="text" class="form-control" th:field="*{description}"/>
                     <label>Categories</label>
@@ -37,6 +41,10 @@
                     <label>Cook Time</label>
                     <input type="text" class="form-control" th:field="*{cookTime}"/>
                     <label>Difficulty</label>
+                    <select class="form-control" th:field="*{difficulty}">
+                        <option th:each="difficultyValue : ${T(com.prashanth.recipesapp.model.Difficulty).values()}"
+                        th:value="${difficultyValue.name()}" th:text="${difficultyValue.name()}">Val</option>
+                    </select>
                     <label>Servings</label>
                     <input type="text" class="form-control" th:field="*{servings}"/>
                     <label>Source</label>

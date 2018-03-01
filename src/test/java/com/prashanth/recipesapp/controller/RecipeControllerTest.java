@@ -1,6 +1,7 @@
 package com.prashanth.recipesapp.controller;
 
 import com.prashanth.recipesapp.command.RecipeCommand;
+import com.prashanth.recipesapp.exception.NotFoundException;
 import com.prashanth.recipesapp.model.Recipe;
 import com.prashanth.recipesapp.service.RecipeService;
 import org.junit.Before;
@@ -20,9 +21,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -79,7 +81,7 @@ public class RecipeControllerTest {
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"));
+                .andExpect(model().attributeExists("recipe"));
     }
 
     @Test
@@ -106,7 +108,7 @@ public class RecipeControllerTest {
         mockMvc.perform(get("/recipe/2/update"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/saveRecipe"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"));
+                .andExpect(model().attributeExists("recipe"));
 
     }
 
@@ -115,5 +117,25 @@ public class RecipeControllerTest {
         mockMvc.perform(get("/recipe/1/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipes"));
+    }
+
+    @Test
+    public void handleNotFound() throws Exception {
+        when(recipeService.getRecipeById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/5/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("404error"));
+    }
+
+    @Test
+    public void handleNumberError() throws Exception {
+        when(recipeService.getRecipeById(any())).thenThrow(NumberFormatException.class);
+        mockMvc.perform(get("/recipe/as/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("genericerrorpage"))
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(model().attributeExists("errorCode"));
     }
 }

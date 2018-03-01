@@ -2,6 +2,7 @@ package com.prashanth.recipesapp.service;
 
 import com.prashanth.recipesapp.converter.RecipeCommandToRecipe;
 import com.prashanth.recipesapp.converter.RecipeToRecipeCommand;
+import com.prashanth.recipesapp.exception.NotFoundException;
 import com.prashanth.recipesapp.model.Recipe;
 import com.prashanth.recipesapp.repository.RecipeRepository;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 public class RecipeServiceImplTest {
 
@@ -41,7 +43,7 @@ public class RecipeServiceImplTest {
         HashSet<Recipe> recipeHashSet = new HashSet<>();
         recipeHashSet.add(recipe);
 
-        Mockito.when(recipeService.getRecipes()).thenReturn(recipeHashSet);
+        when(recipeService.getRecipes()).thenReturn(recipeHashSet);
 
 
         Set<Recipe> recipes = recipeService.getRecipes();
@@ -59,7 +61,7 @@ public class RecipeServiceImplTest {
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         //when
-        Mockito.when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
         //then
         Recipe returnedRecipe = recipeService.getRecipeById(id);
@@ -77,5 +79,12 @@ public class RecipeServiceImplTest {
         recipeService.deleteById(idToDelete);
 
         Mockito.verify(recipeRepository,Mockito.times(1)).deleteById(anyLong());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getRecipesError(){
+        Optional<Recipe> recipeOptional = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        recipeService.getRecipeById(1L);
     }
 }
