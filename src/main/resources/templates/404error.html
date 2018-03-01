@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Error</title>
+</head>
+<body>
+
+<h1>404 Not Found</h1>
+<p th:text="${exception.getMessage()}">Exception Message</p>
+<a href="#" th:href="@{/recipes}">Home</a>
+</body>
+</html>
