@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 
 @Controller
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final String RECIPE_SAVERECIPE_URL="recipe/saveRecipe";
 
     @Autowired
     public RecipeController(RecipeService recipeService) {
@@ -40,17 +44,23 @@ public class RecipeController {
     @GetMapping("recipe/new")
     public String showRecipeForm(Model model){
         model.addAttribute("recipe", new RecipeCommand());
-        return "recipe/saveRecipe";
+        return RECIPE_SAVERECIPE_URL;
     }
 
     @GetMapping("recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model){
         model.addAttribute("recipe", recipeService.getRecipeCommandById(new Long(id)));
-        return "recipe/saveRecipe";
+        return RECIPE_SAVERECIPE_URL;
     }
 
     @PostMapping("recipe")
-    public String saveOrUpdate(@ModelAttribute RecipeCommand command){
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            bindingResult.getAllErrors().forEach(objectError -> {
+                log.debug(objectError.toString());
+            });
+            return RECIPE_SAVERECIPE_URL;
+        }
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
         return "redirect:/recipe/" + savedCommand.getId() + "/show";
     }
@@ -77,15 +87,6 @@ public class RecipeController {
         return modelAndView;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException.class)
-    public ModelAndView handleNumberError(Exception exception){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("genericerrorpage");
-        modelAndView.addObject("exception",exception);
-        modelAndView.addObject("errorCode","400");
-        return modelAndView;
 
-    }
 
 }

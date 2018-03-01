@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -40,7 +41,9 @@ public class RecipeControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         controller = new RecipeController(recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -92,9 +95,26 @@ public class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "")
-                .param("description","desc String"))
+                .param("description","desc String")
+                .param("directions","Some Direction"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/2/show"));
+
+    }
+
+    @Test
+    public void testNewRecipeValidators() throws Exception{
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipeCommand);
+
+        mockMvc.perform(post("/recipe")
+                .param("id","")
+            )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("recipe"))
+                .andExpect(view().name("recipe/saveRecipe"));
 
     }
 
@@ -131,7 +151,6 @@ public class RecipeControllerTest {
 
     @Test
     public void handleNumberError() throws Exception {
-        when(recipeService.getRecipeById(any())).thenThrow(NumberFormatException.class);
         mockMvc.perform(get("/recipe/as/show"))
                 .andExpect(status().isBadRequest())
                 .andExpect(view().name("genericerrorpage"))

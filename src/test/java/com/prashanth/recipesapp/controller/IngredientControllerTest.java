@@ -42,7 +42,9 @@ public class IngredientControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ingredientController = new IngredientController(recipeService,ingredientService,unitOfMeasureService);
-        mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(ingredientController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -121,5 +123,14 @@ public class IngredientControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/ingredients"));
         verify(ingredientService, times(1)).deleteIngredientById(anyLong(),anyLong());
+    }
+
+    @Test
+    public void handleNumberError() throws Exception {
+        mockMvc.perform(get("/recipe/as/ingredients"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("genericerrorpage"))
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(model().attributeExists("errorCode"));
     }
 }
